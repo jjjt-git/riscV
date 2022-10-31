@@ -28,6 +28,27 @@ begin
 	s(3) <= a(3) xor b(3) xor c(2);	
 end;
 
+architecture adder_4bit_caska of adder_4bit is
+	signal will_carry: bit;
+	signal is_set: bit_vector (3 downto 0);
+	signal s_co: bit;
+begin
+	co <= will_carry or s_co;
+	
+	will_carry <= is_set(0) and is_set(1) and is_set(2) and is_set(3) and ci;
+	is_set <= a or b;
+	
+	ADD : entity work.adder_4bit(adder_4bit_cra)
+		port map (
+			a => a,
+			b => b,
+			ci => ci,
+			s => s,
+			co => s_co
+		);
+end;
+
+
 --0 0 0  0 0
 --0 0 1  0 1
 --0 1 0  0 1
