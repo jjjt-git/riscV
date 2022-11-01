@@ -10,7 +10,7 @@ port (
 );
 end;
 
-architecture adder_4bit_cra of adder_4bit is
+architecture cra of adder_4bit is
 	signal c: bit_vector (3 downto 0);
 begin
 	co <= c(3);
@@ -28,7 +28,7 @@ begin
 	s(3) <= a(3) xor b(3) xor c(2);	
 end;
 
-architecture adder_4bit_caska of adder_4bit is
+architecture caska of adder_4bit is
 	signal will_carry: bit;
 	signal is_set: bit_vector (3 downto 0);
 	signal s_co: bit;
@@ -38,7 +38,7 @@ begin
 	will_carry <= is_set(0) and is_set(1) and is_set(2) and is_set(3) and ci;
 	is_set <= a or b;
 	
-	ADD : entity work.adder_4bit(adder_4bit_cra)
+	ADD : entity work.adder_4bit(cra)
 		port map (
 			a => a,
 			b => b,
@@ -48,6 +48,38 @@ begin
 		);
 end;
 
+architecture cla of adder_4bit is
+	signal prop: bit_vector (3 downto 0); -- propagation bits
+	signal gen: bit_vector (3 downto 0); -- generation bits
+	signal c: bit_vector (4 downto 0); -- carry bits
+begin
+	-- GENERATION AND PROPAGATION SIGNALS
+	-- when none set -> absorbing
+	gen <= a and b;
+	prop <= a xor b;
+	
+	co <= c(4);
+	
+	-- CARRY CALC
+	c(0) <= ci;
+	c(1) <= gen(0) or
+		(ci and prop(0));
+	c(2) <= gen(1) or
+		(gen(0) and prop(1)) or
+		(ci and prop(0) and prop(1));
+	c(3) <= gen(2) or
+		(gen(1) and prop(2)) or
+		(gen(0) and prop(1) and prop(2)) or
+		(ci and prop(0) and prop(1) and prop(2));
+	c(4) <= gen(3) or -- MSB generates cb
+		(gen(2) and prop(3)) or -- we propagate cb of bit 2
+		(gen(1) and prop(2) and prop(3)) or -- we propagate cb of bit 1
+		(gen(0) and prop(1) and prop(2) and prop(3)) or -- we propagate cb of bit 0
+		(ci and prop(0) and prop(1) and prop(2) and prop(3)); -- we propagate ci;
+	
+	-- SUM CALC
+	s <= prop xor c(3 downto 0);
+end;
 
 --0 0 0  0 0
 --0 0 1  0 1
