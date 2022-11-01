@@ -1,2 +1,5 @@
 *.cf
 *.o
+*.ghw
+tb_*
+!tb_*.vhdl
