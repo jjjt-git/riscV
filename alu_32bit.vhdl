@@ -14,6 +14,7 @@ port (
 					-- 0101 shift left
 					-- 0110 shift right
 					-- 0111 arithmetic shift
+					-- 1000 equal
 					-- 1001 less than
 );
 end;
@@ -26,7 +27,7 @@ architecture def of alu_32bit is
 	
 	signal res_lshift, res_rshift, ashifts, rshift1, shift0, shift1: bit_vector(31 downto 0);
 	
-	signal res_lt: bit_vector(31 downto 0);
+	signal res_lt, res_eq, res_bit_eq: bit_vector(31 downto 0);
 
 	signal zero, one: bit_vector(31 downto 0);
 	signal lsb: bit;
@@ -93,7 +94,13 @@ begin
 		);
 	-- comparison
 	res_lt(31 downto 1) <= zero(31 downto 1);
+	res_eq(31 downto 1) <= zero(31 downto 1);
+
 	res_lt(0) <= add_r(31); -- op0 < op1, exactly when op0 - op1 < 0
+
+	res_bit_eq(0) <= not (op0(0) xor op1(0)); -- up to this bit, are they equal?
+	res_bit_eq(31 downto 1) <= not (op0(31 downto 1) xor op1(31 downto 1)) and res_bit_eq(30 downto 0); -- up to this bit, are they equal?
+	res_eq(0) <= res_bit_eq(31);
 
 	-- select correct result
 	OP_MUX : entity work.mux16_32bit
@@ -107,6 +114,7 @@ begin
 					-- 0101 shift left
 					-- 0110 shift right
 					-- 0111 arithmetic shift
+					-- 1000 equal
 					-- 1001 less than
 			d0000 => add_r,
 			d0001 => add_r,
@@ -116,7 +124,7 @@ begin
 			d0101 => res_lshift,
 			d0110 => res_rshift,
 			d0111 => res_rshift,
-			d1000 => zero,
+			d1000 => res_eq,
 			d1001 => res_lt,
 			d1010 => zero,
 			d1011 => zero,

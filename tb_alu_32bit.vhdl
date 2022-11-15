@@ -8,9 +8,6 @@ architecture test of tb_alu_32bit is
 	signal a, b, s: bit_vector(31 downto 0);
 	signal op: bit_vector(3 downto 0);
 begin
-	a <= "00000000000000000000000000000110";
-	b <= "00000000000000000000000000001010";
-
 	ALU : entity work.alu_32bit
 		port map (
 			op0 => a,
@@ -22,6 +19,9 @@ begin
 	tb : process
 		constant dt: time:= 10 ns;
 		begin
+			a <= "00000000000000000000000000000110";
+			b <= "00000000000000000000000000001010";
+
 			wait for dt;
 			op <= "0000";
 			wait for dt;
@@ -61,6 +61,22 @@ begin
 			op <= "0111";
 			wait for dt;
 			assert s = "00000000000000000000000000000000" report "a-shift wrong";
+
+			wait for dt;
+			op <= "1000";
+			wait for dt;
+			assert s = "00000000000000000000000000000000" report "eq wrong";
+
+			wait for dt;
+			op <= "1000";
+			a <= x"18a6F790";
+			a <= x"18a6F790";
+			wait for dt;
+			assert s = "00000000000000000000000000000000" report "eq wrong";
+			wait for dt;
+
+			a <= "00000000000000000000000000000110";
+			b <= "00000000000000000000000000001010";
 
 			wait for dt;
 			op <= "1001";
