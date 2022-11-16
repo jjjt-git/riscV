@@ -27,7 +27,7 @@ architecture def of alu_32bit is
 	
 	signal res_lshift, res_rshift, ashifts, rshift1, shift0, shift1: bit_vector(31 downto 0);
 	
-	signal res_lt, res_eq, res_bit_eq: bit_vector(31 downto 0);
+	signal res_lt, res_ltu, res_eq, res_bit_eq: bit_vector(31 downto 0);
 
 	signal zero, one: bit_vector(31 downto 0);
 	signal lsb: bit;
@@ -94,9 +94,11 @@ begin
 		);
 	-- comparison
 	res_lt(31 downto 1) <= zero(31 downto 1);
+	res_ltu(31 downto 1) <= zero(31 downto 1);
 	res_eq(31 downto 1) <= zero(31 downto 1);
 
 	res_lt(0) <= add_r(31); -- op0 < op1, exactly when op0 - op1 < 0
+	res_ltu(0) <= not add_co;
 
 	res_bit_eq(0) <= not (op0(0) xor op1(0)); -- up to this bit, are they equal?
 	res_bit_eq(31 downto 1) <= not (op0(31 downto 1) xor op1(31 downto 1)) and res_bit_eq(30 downto 0); -- up to this bit, are they equal?
@@ -116,6 +118,7 @@ begin
 					-- 0111 arithmetic shift
 					-- 1000 equal
 					-- 1001 less than
+					-- 1011 less than (unsigned)
 			d0000 => add_r,
 			d0001 => add_r,
 			d0010 => and_r,
@@ -127,7 +130,7 @@ begin
 			d1000 => res_eq,
 			d1001 => res_lt,
 			d1010 => zero,
-			d1011 => zero,
+			d1011 => res_ltu,
 			d1100 => zero,
 			d1101 => zero,
 			d1110 => zero,

@@ -70,9 +70,9 @@ begin
 			wait for dt;
 			op <= "1000";
 			a <= x"18a6F790";
-			a <= x"18a6F790";
+			b <= x"18a6F790";
 			wait for dt;
-			assert s = "00000000000000000000000000000000" report "eq wrong";
+			assert s = "00000000000000000000000000000001" report "eq wrong";
 			wait for dt;
 
 			a <= "00000000000000000000000000000110";
@@ -82,6 +82,24 @@ begin
 			op <= "1001";
 			wait for dt;
 			assert s = "00000000000000000000000000000001" report "lt wrong";
+			wait for dt;
+
+			a <= "00000000000000000000000000000110";
+			b <= "11111111111111111111111111111010";
+
+			wait for dt;
+			op <= "1011";
+			wait for dt;
+			assert s = "00000000000000000000000000000001" report "ltu wrong";
+			wait for dt;
+
+			a <= "00000000000000000000000000000110";
+			b <= "00000000000000000000000000000110";
+
+			wait for dt;
+			op <= "1011";
+			wait for dt;
+			assert s = "00000000000000000000000000000000" report "ltu wrong";
 
 			assert false report "End of Test";
 			wait;

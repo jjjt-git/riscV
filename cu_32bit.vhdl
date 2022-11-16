@@ -52,6 +52,7 @@ architecture def of cu_32bit is
 						-- 0111 arithmetic shift
 						-- 1000 equal
 						-- 1001 less than
+						-- 1011 less than (unsigned)
 
 	-- START OPCODE-CONSTANTS
 	-- constant 		: bit_vector(6 downto 0) := "";
@@ -275,8 +276,8 @@ begin
 					aluOp <= "1001";
 					alu0 <= cReg0;
 					alu1 <= cReg1;
-				elsif funct = I_SLTU then -- TODO
-					aluOp <= "0011";
+				elsif funct = I_SLTU then
+					aluOp <= "1011";
 					alu0 <= cReg0;
 					alu1 <= cReg1;
 				elsif funct = I_SLL then
@@ -360,13 +361,20 @@ begin
 					alu0 <= cReg0;
 					alu1 <= cReg1;
 					bCond <= aluOut(0);
-				elsif funct3 = I_BLTU then -- TODO
+				elsif funct3 = I_BLTU then
+					aluOp <= "1011";
+					alu0 <= cReg0;
+					alu1 <= cReg1;
 				elsif funct3 = I_BGE then
 					aluOp <= "1001";
 					alu0 <= cReg0;
 					alu1 <= cReg1;
 					bCond <= not aluOut(0);
-				elsif funct3 = I_BGEU then -- TODO
+				elsif funct3 = I_BGEU then
+					aluOp <= "1011";
+					alu0 <= cReg0;
+					alu1 <= cReg1;
+					bCond <= not aluOut(0);
 				end if;
 			elsif opcode = C_LOAD then -- TODO after EEI
 			elsif opcode = C_STORE then -- TODO after EEI
