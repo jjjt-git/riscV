@@ -2,8 +2,9 @@ library ieee;
 
 entity cu_32bit is
 port (
-	memWord: in bit_vector(31 downto 0);
+	memWord: inout bit_vector(31 downto 0);
 	memAddr: out bit_vector(31 downto 0);
+	fetchInstruction: out bit;
 	clk: in bit
 );
 end;
@@ -102,7 +103,8 @@ architecture def of cu_32bit is
 	constant I_SRA		: bit_vector(9 downto 0) := "0100000101";
 	constant I_OR		: bit_vector(9 downto 0) := "0000000110";
 	constant I_AND		: bit_vector(9 downto 0) := "0000000111";
-	-- TODO ECALL EBREAK
+	constant I_ECALL	: bit_vector(14 downto 0) := "000000000000000";
+	constant I_EBREAK	: bit_vector(14 downto 0) := "000000000001000";
 begin
 	one <= x"FFFFFFFF";
 	zero <= x"00000000";
@@ -162,6 +164,8 @@ begin
 			setRegDest <= '0';
 			pcSet <= '0';
 			longJump <= '0';
+
+			fetchInstruction <= '1';
 		elsif state = "00010" then --decode/execute
 			opcode <= instruction(6 downto 0);
 			rs1 <= instruction(19 downto 15);
