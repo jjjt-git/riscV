@@ -5,7 +5,8 @@ port (
 	memWord: inout bit_vector(31 downto 0);
 	memAddr: out bit_vector(31 downto 0);
 	fetchInstruction: out bit;
-	clk: in bit
+	clk: in bit;
+	rst: in bit
 );
 end;
 
@@ -26,6 +27,10 @@ architecture def of cu_32bit is
 						-- 2 (memory)
 						-- 3 write
 						-- 5 jump
+	signal rstState: bit_vector(1 downto 0);	-- 0 PC d
+							-- 1 PC set
+							-- 2 PC confirm
+							-- 3 no RST (normal operation)
 
 	-- register-bank
 	signal setRegDest: bit;
@@ -160,7 +165,18 @@ begin
 	process (clk)
 	begin
 	if rising_edge(clk) then
-		if state = "00001" then --fetch TODO
+		if rst = '1' or rstState = "00" then
+			state <= "00001";
+			pcD <= zero; -- start-address here
+			rstState <= "01";
+			pcSet <= '0';
+		elsif rstState = "01" then
+			rstState <= "10";
+			pcSet <= '1';
+		elsif rstState = "10" then
+			rstState <= "11";
+			pcSet <= '0';
+		elsif state = "00001" then --fetch TODO simul with FIFO-Stack
 			state <= "00010";
 			setRegDest <= '0';
 			pcSet <= '0';

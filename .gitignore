@@ -2,4 +2,4 @@
 *.o
 *.ghw
 tb_*
-!tb_*.vhdl
+!tb_*.vhd

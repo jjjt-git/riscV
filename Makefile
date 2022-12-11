@@ -3,11 +3,11 @@ RM := rm -rf
 
 GHDLOPTS := --std=08
 
-MODULES := $(wildcard *.vhdl)
-OBJECTS := $(MODULES:.vhdl=.o)
-DEPS := $(MODULES:.vhdl=.d)
+MODULES := $(wildcard *.vhd)
+OBJECTS := $(MODULES:.vhd=.o)
+DEPS := $(MODULES:.vhd=.d)
 
-TESTBENCHES := $(patsubst %.vhdl,%,$(wildcard tb_*.vhdl))
+TESTBENCHES := $(patsubst %.vhd,%,$(wildcard tb_*.vhd))
 TB_RUN_TRGS := $(addprefix run_,$(TESTBENCHES))
 
 MODULES_IMPORT_TRGS := $(addprefix import_,$(MODULES))
@@ -22,7 +22,7 @@ $(TB_RUN_TRGS): run_%: %
 clear:
 	$(RM) $(subst .o,,$(OBJECTS)) *.o *.cf *.d *.ghw
 
-$(OBJECTS): %.o: %.vhdl $(MODULES_IMPORT_TRGS)
+$(OBJECTS): %.o: %.vhd $(MODULES_IMPORT_TRGS)
 	$(GHDL) -a $(GHDLOPTS) $<
 
 $(TESTBENCHES): %: %.o
@@ -30,3 +30,4 @@ $(TESTBENCHES): %: %.o
 
 $(MODULES_IMPORT_TRGS): import_%: %
 	$(GHDL) -i $(GHDLOPTS) $*
+
