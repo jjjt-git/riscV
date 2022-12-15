@@ -18,9 +18,9 @@ architecture def of register_32bit is
 begin
 	FF: process (set)
 	begin
-		if rising_edge(set) then
+		if set'event and set = '1' then
 			tmp <= data;
-		elsif falling_edge(set) then
+		elsif set'event and set = '0' then
 			content <= tmp;
 		end if;
 	end process;
