@@ -16,6 +16,7 @@ port (
 					-- 0111 arithmetic shift
 					-- 1000 equal
 					-- 1001 less than
+					-- 1011 less than unsigned
 );
 end;
 
@@ -51,7 +52,7 @@ begin
 			d0 => add_1,
 			d1 => sub_1
 		);
-	sub_1 <= not add_1;
+	sub_1 <= add_1 xor one;
 	add_0 <= op0;
 	add_1 <= op1;
 	
@@ -101,7 +102,7 @@ begin
 	res_ltu(0) <= not add_co;
 
 	res_bit_eq(0) <= not (op0(0) xor op1(0)); -- up to this bit, are they equal?
-	res_bit_eq(31 downto 1) <= not (op0(31 downto 1) xor op1(31 downto 1)) and res_bit_eq(30 downto 0); -- up to this bit, are they equal?
+	res_bit_eq(31 downto 1) <= (op0(31 downto 1) xor op1(31 downto 1) xor one (31 downto 1)) and res_bit_eq(30 downto 0); -- up to this bit, are they equal?
 	res_eq(0) <= res_bit_eq(31);
 
 	-- select correct result
