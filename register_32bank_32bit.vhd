@@ -39,43 +39,37 @@ architecture def of register_32bank_32bit is
 begin
 	zero <= x"00000000";
 
-	process (regw, set) is
-	begin
-		if set'event and set = '1' then
-			if regw = "00001" then s00001 <= set;
-			elsif regw = "00010" then s00010 <= set;
-			elsif regw = "00011" then s00011 <= set;
-			elsif regw = "00100" then s00100 <= set;
-			elsif regw = "00101" then s00101 <= set;
-			elsif regw = "00110" then s00110 <= set;
-			elsif regw = "00111" then s00111 <= set;
-			elsif regw = "01000" then s01000 <= set;
-			elsif regw = "01001" then s01001 <= set;
-			elsif regw = "01010" then s01010 <= set;
-			elsif regw = "01011" then s01011 <= set;
-			elsif regw = "01100" then s01100 <= set;
-			elsif regw = "01101" then s01101 <= set;
-			elsif regw = "01110" then s01110 <= set;
-			elsif regw = "01111" then s01111 <= set;
-			elsif regw = "10000" then s10000 <= set;
-			elsif regw = "10001" then s10001 <= set;
-			elsif regw = "10010" then s10010 <= set;
-			elsif regw = "10011" then s10011 <= set;
-			elsif regw = "10100" then s10100 <= set;
-			elsif regw = "10101" then s10101 <= set;
-			elsif regw = "10110" then s10110 <= set;
-			elsif regw = "10111" then s10111 <= set;
-			elsif regw = "11000" then s11000 <= set;
-			elsif regw = "11001" then s11001 <= set;
-			elsif regw = "11010" then s11010 <= set;
-			elsif regw = "11011" then s11011 <= set;
-			elsif regw = "11100" then s11100 <= set;
-			elsif regw = "11101" then s11101 <= set;
-			elsif regw = "11110" then s11110 <= set;
-			elsif regw = "11111" then s11111 <= set;
-			end if;
-		end if;
-	end process;
+	with regw select s00001 <= set when "00001", '0' when others;
+	with regw select s00010 <= set when "00010", '0' when others;
+	with regw select s00011 <= set when "00011", '0' when others;
+	with regw select s00100 <= set when "00100", '0' when others;
+	with regw select s00101 <= set when "00101", '0' when others;
+	with regw select s00110 <= set when "00110", '0' when others;
+	with regw select s00111 <= set when "00111", '0' when others;
+	with regw select s01000 <= set when "01000", '0' when others;
+	with regw select s01001 <= set when "01001", '0' when others;
+	with regw select s01010 <= set when "01010", '0' when others;
+	with regw select s01011 <= set when "01011", '0' when others;
+	with regw select s01100 <= set when "01100", '0' when others;
+	with regw select s01101 <= set when "01101", '0' when others;
+	with regw select s01110 <= set when "01110", '0' when others;
+	with regw select s01111 <= set when "01111", '0' when others;
+	with regw select s10000 <= set when "10000", '0' when others;
+	with regw select s10001 <= set when "10001", '0' when others;
+	with regw select s10010 <= set when "10010", '0' when others;
+	with regw select s10011 <= set when "10011", '0' when others;
+	with regw select s10100 <= set when "10100", '0' when others;
+	with regw select s10101 <= set when "10101", '0' when others;
+	with regw select s10110 <= set when "10110", '0' when others;
+	with regw select s10111 <= set when "10111", '0' when others;
+	with regw select s11000 <= set when "11000", '0' when others;
+	with regw select s11001 <= set when "11001", '0' when others;
+	with regw select s11010 <= set when "11010", '0' when others;
+	with regw select s11011 <= set when "11011", '0' when others;
+	with regw select s11100 <= set when "11100", '0' when others;
+	with regw select s11101 <= set when "11101", '0' when others;
+	with regw select s11110 <= set when "11110", '0' when others;
+	with regw select s11111 <= set when "11111", '0' when others;
 
 	MUXR0 : entity work.mux32_32bit
 	port map (

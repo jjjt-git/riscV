@@ -48,7 +48,7 @@ architecture def of cu_32bit is
 	-- control
 	signal crtl_useAluRes, crtl_usePcInAlu,
 		crtl_useImmediateInAlu, crtl_isJmp,
-		crtl_specialPcOp, crtl_writeReg,
+		crtl_branch, crtl_writeReg,
 		crtl_negateCond, crtl_memRead,
 		crtl_memWrite, crtl_memUnsigned,
 		crtl_pcRst, crtl_fetch: bit;
@@ -257,7 +257,7 @@ begin
 	source0 <= rs1;
 	source1 <= rs2;
 
-	bCond <= aluOut(0) xor crtl_negateCond;
+	bCond <= (aluOut(0) xor crtl_negateCond) and crtl_branch;
 
 	with crtl_useAluRes select dReg <=
 		dRegTmp0 when '1',
@@ -287,7 +287,7 @@ begin
 		immediate when '0',
 		memRd when '1';
 
-	with crtl_specialPcOp and bCond select pcI0 <=
+	with bCond select pcI0 <=
 		x"00000004" when '0',
 		immediate when '1';
 
@@ -344,7 +344,7 @@ begin
 			crtl_usePcInAlu <= '0';
 			crtl_useImmediateInAlu <= '0';
 			crtl_isJmp <= '0';
-			crtl_specialPcOp <= '0';
+			crtl_branch <= '0';
 			crtl_writeReg <= '0';
 			crtl_memWrite <= '0';
 
@@ -366,7 +366,7 @@ begin
 				crtl_usePcInAlu <= '0';
 				crtl_useImmediateInAlu <= '1';
 				crtl_isJmp <= '0';
-				crtl_specialPcOp <= '0';
+				crtl_branch <= '0';
 				crtl_writeReg <= '1';
 				crtl_memRead <= '0';
 				crtl_memWrite <= '0';
@@ -394,7 +394,7 @@ begin
 				crtl_usePcInAlu <= '0';
 				crtl_useImmediateInAlu <= '0';
 				crtl_isJmp <= '0';
-				crtl_specialPcOp <= '0';
+				crtl_branch <= '0';
 				crtl_writeReg <= '1';
 				crtl_memRead <= '0';
 				crtl_memWrite <= '0';
@@ -403,7 +403,7 @@ begin
 				crtl_usePcInAlu <= '1';
 				crtl_useImmediateInAlu <= '1';
 				crtl_isJmp <= '0';
-				crtl_specialPcOp <= '0';
+				crtl_branch <= '0';
 				crtl_writeReg <= '1';
 				crtl_memRead <= '0';
 				crtl_memWrite <= '0';
@@ -412,7 +412,7 @@ begin
 				crtl_usePcInAlu <= '0';
 				crtl_useImmediateInAlu <= '0';
 				crtl_isJmp <= '0';
-				crtl_specialPcOp <= '0';
+				crtl_branch <= '0';
 				crtl_writeReg <= '1';
 				crtl_memRead <= '0';
 				crtl_memWrite <= '0';
@@ -442,7 +442,7 @@ begin
 				crtl_usePcInAlu <= '1';
 				crtl_useImmediateInAlu <= '1';
 				crtl_isJmp <= '1';
-				crtl_specialPcOp <= '0';
+				crtl_branch <= '0';
 				crtl_writeReg <= '1';
 				crtl_memRead <= '0';
 				crtl_memWrite <= '0';
@@ -451,7 +451,7 @@ begin
 				crtl_usePcInAlu <= '1';
 				crtl_useImmediateInAlu <= '0';
 				crtl_isJmp <= '1';
-				crtl_specialPcOp <= '0';
+				crtl_branch <= '0';
 				crtl_writeReg <= '1';
 				crtl_memRead <= '0';
 				crtl_memWrite <= '0';
@@ -460,7 +460,7 @@ begin
 				crtl_usePcInAlu <= '0';
 				crtl_useImmediateInAlu <= '0';
 				crtl_isJmp <= '0';
-				crtl_specialPcOp <= '1';
+				crtl_branch <= '1';
 				crtl_writeReg <= '0';
 				crtl_memRead <= '0';
 				crtl_memWrite <= '0';
@@ -488,7 +488,7 @@ begin
 				crtl_usePcInAlu <= '0';
 				crtl_useImmediateInAlu <= '1';
 				crtl_isJmp <= '0';
-				crtl_specialPcOp <= '0';
+				crtl_branch <= '0';
 				crtl_writeReg <= '1';
 				crtl_memRead <= '1';
 				crtl_memWrite <= '0';
@@ -514,7 +514,7 @@ begin
 				crtl_usePcInAlu <= '0';
 				crtl_useImmediateInAlu <= '1';
 				crtl_isJmp <= '0';
-				crtl_specialPcOp <= '0';
+				crtl_branch <= '0';
 				crtl_writeReg <= '0';
 				crtl_memRead <= '0';
 				crtl_memWrite <= '1';
