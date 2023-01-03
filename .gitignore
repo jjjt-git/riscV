@@ -3,3 +3,4 @@
 *.ghw
 tb_*
 !tb_*.vhd
+ddr2-spec.pdf
