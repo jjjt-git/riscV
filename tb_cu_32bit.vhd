@@ -21,20 +21,25 @@ begin
 	memRd <= memRdRom or memRdSw;
 
 	with memAddr select memRdSw <=
-		x"00000002" when x"00000002",
+		x"00000000" when x"00000002",
 		x"00000000" when others;
 
 	with memAddr select memRdRom <=
+--		x"00205083" when x"00000008",
+--		x"00000013" when x"0000000C",
+--		x"00205103" when x"00000010",
+--		x"00000013" when x"00000014",
+--		x"000001B3" when x"00000018",
+--		x"00200863" when x"0000001C",
+--		x"003081B3" when x"00000020",
+--		x"FFF10113" when x"00000024",
+--		x"FF5FF06F" when x"00000028",
+--		x"00302223" when x"0000002C",
+
 		x"00205083" when x"00000008",
-		x"00000013" when x"0000000C",
-		x"00205103" when x"00000010",
-		x"00000013" when x"00000014",
-		x"000001B3" when x"00000018",
-		x"00200863" when x"0000001C",
-		x"003081B3" when x"00000020",
-		x"FFF10113" when x"00000024",
-		x"FF5FF06F" when x"00000028",
-		x"00302223" when x"0000002C",
+		x"FE100EE3" when x"0000000C",
+		x"00102123" when x"00000010",
+
 		x"00000000" when others;
 
 	process

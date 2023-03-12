@@ -73,7 +73,16 @@ begin
 			b <= x"18a6F790";
 			wait for dt;
 			assert s = "00000000000000000000000000000001" report "eq wrong";
+
 			wait for dt;
+			op <= "1000";
+			a <= x"00000000";
+			b <= x"00000000";
+			wait for dt;
+			assert s = x"00000001" report "eq wrong";
+
+			wait for dt;
+
 
 			a <= "00000000000000000000000000000110";
 			b <= "00000000000000000000000000001010";
