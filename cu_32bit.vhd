@@ -84,6 +84,8 @@ architecture def of cu_32bit is
 						-- 1001 less than
 						-- 1011 less than (unsigned)
 
+	signal DEBUG_UNKNOWN_INSTRUCTION: bit;
+
 	-- START OPCODE-CONSTANTS
 	-- constant 		: bit_vector(6 downto 0) := "";
 	constant C_OP_IMM	: bit_vector(6 downto 0) := "0010011";
@@ -350,6 +352,8 @@ begin
 
 			pcSet <= '0';
 			setRegDest <= '0';
+
+			DEBUG_UNKNOWN_INSTRUCTION <= '0';
 		elsif state = "00010" then --decode
 			state <= "00100";
 
@@ -388,6 +392,8 @@ begin
 					aluOp <= "0110";
 				elsif funct = I_SRAI then
 					aluOp <= "0111";
+				else
+					DEBUG_UNKNOWN_INSTRUCTION <= '1';
 				end if;
 			elsif opcode = C_LUI then
 				crtl_useAluRes <= '0';
@@ -436,6 +442,8 @@ begin
 					aluOp <= "0111";
 				elsif funct = I_SUB then
 					aluOp <= "0001";
+				else
+					DEBUG_UNKNOWN_INSTRUCTION <= '1';
 				end if;
 			elsif opcode = C_JAL then
 				crtl_useAluRes <= '0';
@@ -448,7 +456,7 @@ begin
 				crtl_memWrite <= '0';
 			elsif opcode = C_JALR then
 				crtl_useAluRes <= '0';
-				crtl_usePcInAlu <= '1';
+				crtl_usePcInAlu <= '0';
 				crtl_useImmediateInAlu <= '0';
 				crtl_isJmp <= '1';
 				crtl_branch <= '0';
@@ -482,6 +490,8 @@ begin
 				elsif funct3 = I_BGEU then
 					crtl_negateCond <= '1';
 					aluOp <= "1011";
+				else
+					DEBUG_UNKNOWN_INSTRUCTION <= '1';
 				end if;
 			elsif opcode = C_LOAD then
 				crtl_useAluRes <= '0';
@@ -508,6 +518,8 @@ begin
 					crtl_memUnsigned <= '1';
 				elsif funct3 = I_LW then
 					crtl_memLen <= "11";
+				else
+					DEBUG_UNKNOWN_INSTRUCTION <= '1';
 				end if;
 			elsif opcode = C_STORE then
 				crtl_useAluRes <= '0';
@@ -526,7 +538,11 @@ begin
 					crtl_memLen <= "10";
 				elsif funct3 = I_SW then
 					crtl_memLen <= "11";
+				else
+					DEBUG_UNKNOWN_INSTRUCTION <= '1';
 				end if;
+			else
+				DEBUG_UNKNOWN_INSTRUCTION <= '1';
 			end if;
 		elsif state = "01000" then --mem
 			state <= "10000";
